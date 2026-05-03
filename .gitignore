@@ -1,3 +1,11 @@
+# Everything except .tex, .pdf, and .png files in the report directory
+/report/*
+!/report/*.tex
+!/report/*.pdf
+!/report/*.png
+
+--------------------------------------------------------------------------------------------
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

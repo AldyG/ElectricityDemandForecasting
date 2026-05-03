@@ -1,0 +1,439 @@
+\documentclass[12pt, a4paper]{report}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{lipsum}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+% ─── Hyperref Setup ───────────────────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    pdftitle={Electricity Demand Forecasting},
+    pdfauthor={Group X}
+}
+
+% ─── Header / Footer ─────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ─── Chapter Title Formatting ─────────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptername\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{30pt}{20pt}
+
+% ─── Paragraph spacing ───────────────────────────────────────────────────────
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ─── COVER PAGE ──────────────────────────────────────────────────────────────
+\begin{titlepage}
+    \centering
+
+    {\LARGE \textbf{Bandung Institute of Technology}}\\[0.4cm]
+    {\large Informatics / School of Electrical Engineering and Informatics}\\[0.4cm]
+    {\large IF5251 - AI in Production}
+
+    \vspace{0.5cm}
+
+    \rule{\linewidth}{0.5mm}\\[0.4cm]
+    {\Huge \textbf{Electricity Demand Forecasting}}\\[0.2cm]
+    \rule{\linewidth}{0.5mm}
+
+    \vspace{0.5cm}
+
+    % Institution logo slot
+    \vspace{1cm}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=0.35\textwidth]{itb_logo.png}
+        \caption*{}
+    \end{figure}
+
+    \vspace{1cm}
+
+    % Group number
+    {\large \textbf{Group 04}}\\[0.8cm]
+
+    % Group members
+    \begin{tabular}{ll}
+        \textbf{Alif Amirudin} & 23525048 \\[0.3cm]
+        \textbf{Fawwaz Abrial Saffa} & 23525055 \\[0.3cm]
+        \textbf{Ivan Aldy Ganesen} & 23525062 \\[0.3cm]
+        \textbf{Sophia D. Waizer} & 23525901 \\
+    \end{tabular}
+
+    \vfill
+
+    % Institution landmark / location lines (italicized)
+    % [Institution Landmark / Building Name]\\[0.2cm]
+    % [Street Address, City, Country]\\[0.2cm]
+    \textit{Academic Year 2025/2026 - Semester 2}
+
+\end{titlepage}
+
+% ─── TABLE OF CONTENTS ───────────────────────────────────────────────────────
+\newpage
+\pagestyle{plain}
+\setcounter{page}{1}
+\tableofcontents
+
+% ─── TABLE OF TABLES ─────────────────────────────────────────────────────────
+\newpage
+\listoftables
+\addcontentsline{toc}{chapter}{\listtablename}
+
+% ─── TABLE OF FIGURES ────────────────────────────────────────────────────────
+\newpage
+\listoffigures
+\addcontentsline{toc}{chapter}{\listfigurename}
+
+% ─── MAIN CONTENT ────────────────────────────────────────────────────────────
+\newpage
+\pagestyle{fancy}
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  CHAPTER 1 — REQUIREMENTS
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Requirements}
+
+\lipsum[1][1-3]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{System and Model Goals}
+
+\lipsum[2][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{User Requirements}
+
+\lipsum[3][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Environment Assumptions}
+
+\lipsum[4][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Metrics for Measurement}
+
+\lipsum[5][1-3]
+
+\subsection{Functional Metrics}
+
+\lipsum[6][1-4]
+
+% Example placeholder table
+\begin{table}[H]
+    \centering
+    \caption{Functional Metrics Overview}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Metric} & \textbf{Description} & \textbf{Target} \\
+        \midrule
+        MAE  & Mean Absolute Error  & $< 5\%$ \\
+        RMSE & Root Mean Squared Error & $< 8\%$ \\
+        R²   & Coefficient of Determination & $> 0.90$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:functional-metrics}
+\end{table}
+
+\subsection{Non-Functional Metrics}
+
+\lipsum[7][1-4]
+
+% Example placeholder table
+\begin{table}[H]
+    \centering
+    \caption{Non-Functional Metrics Overview}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Metric}   & \textbf{Description}         & \textbf{Target}    \\
+        \midrule
+        Latency           & Inference response time      & <200 ms  \\
+        Throughput        & Requests per second          & >500 rps \\
+        Availability      & System uptime                & 99.9\%           \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:nonfunctional-metrics}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Failure Mode and Effects Analysis}
+
+\lipsum[8][1-4]
+
+% Example placeholder figure
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{4cm}\rule{0.6\textwidth}{0pt}}
+    \caption{FMEA Diagram Placeholder}
+    \label{fig:fmea}
+\end{figure}
+
+\lipsum[9][1-2]
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  CHAPTER 2 — ARCHITECTURE AND DESIGN
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Architecture and Design}
+
+\lipsum[10][1-3]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Modelling Tradeoffs}
+
+\lipsum[11][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Deployment Architecture}
+
+\lipsum[12][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{5cm}\rule{0.75\textwidth}{0pt}}
+    \caption{Deployment Architecture Diagram Placeholder}
+    \label{fig:deployment-arch}
+\end{figure}
+
+\lipsum[13][1-2]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Data Science Pipeline}
+
+\lipsum[14][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{4cm}\rule{0.75\textwidth}{0pt}}
+    \caption{Data Science Pipeline Diagram Placeholder}
+    \label{fig:ds-pipeline}
+\end{figure}
+
+\lipsum[15][1-2]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Telemetry and Monitoring}
+
+\lipsum[16][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Anticipate Evolution}
+
+\lipsum[17][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Big Data Processing}
+
+\lipsum[18][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{4cm}\rule{0.75\textwidth}{0pt}}
+    \caption{Big Data Processing Architecture Placeholder}
+    \label{fig:big-data}
+\end{figure}
+
+\lipsum[19][1-2]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Human-AI Design}
+
+\lipsum[20][1-4]
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  CHAPTER 3 — QUALITY ASSURANCE
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Quality Assurance}
+
+\lipsum[21][1-3]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Model Testing}
+
+\lipsum[22][1-4]
+
+\begin{table}[H]
+    \centering
+    \caption{Model Testing Results Placeholder}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Test Case} & \textbf{Expected Output} & \textbf{Actual Output} \\
+        \midrule
+        Case 1 & Placeholder & Placeholder \\
+        Case 2 & Placeholder & Placeholder \\
+        Case 3 & Placeholder & Placeholder \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:model-testing}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Data Quality}
+
+\lipsum[23][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{QA Automation}
+
+\lipsum[24][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Testing in Production}
+
+\lipsum[25][1-3]
+
+\subsection*{Adversarial Attacks}
+
+\lipsum[26][1-3]
+
+\subsection*{Load Testing}
+
+\lipsum[27][1-3]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Infrastructure Quality}
+
+\lipsum[28][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Debugging}
+
+\lipsum[29][1-4]
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  CHAPTER 4 — OPERATIONS
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Operations}
+
+\lipsum[30][1-3]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Unit Testing, Integration Testing and Continuous Training Pipeline}
+
+\lipsum[31][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{4cm}\rule{0.75\textwidth}{0pt}}
+    \caption{Continuous Training Pipeline Diagram Placeholder}
+    \label{fig:ct-pipeline}
+\end{figure}
+
+\lipsum[32][1-2]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Configuration Management}
+
+\lipsum[33][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Monitoring}
+
+\lipsum[34][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{4cm}\rule{0.75\textwidth}{0pt}}
+    \caption{Monitoring Dashboard Placeholder}
+    \label{fig:monitoring}
+\end{figure}
+
+\lipsum[35][1-2]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Versioning}
+
+\lipsum[36][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{MLOps}
+
+\lipsum[37][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{5cm}\rule{0.75\textwidth}{0pt}}
+    \caption{MLOps Workflow Diagram Placeholder}
+    \label{fig:mlops}
+\end{figure}
+
+\lipsum[38][1-2]
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  CHAPTER 5 — RESPONSIBLE AI
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Responsible AI}
+
+\lipsum[39][1-3]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Privacy}
+
+\lipsum[40][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Sensitive Audits}
+
+\lipsum[41][1-4]
+
+\begin{table}[H]
+    \centering
+    \caption{Sensitive Audit Checklist Placeholder}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Audit Item}  & \textbf{Status}   & \textbf{Notes}      \\
+        \midrule
+        Data Anonymisation   & Pending           & Placeholder         \\
+        Bias Assessment      & Pending           & Placeholder         \\
+        Fairness Evaluation  & Pending           & Placeholder         \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:sensitive-audit}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Explainability}
+
+\lipsum[42][1-4]
+
+\begin{figure}[H]
+    \centering
+    \fbox{\rule{0pt}{4cm}\rule{0.75\textwidth}{0pt}}
+    \caption{Model Explainability (SHAP / LIME) Placeholder}
+    \label{fig:explainability}
+\end{figure}
+
+\lipsum[43][1-2]
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Transparency}
+
+\lipsum[44][1-4]
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+\end{document}
