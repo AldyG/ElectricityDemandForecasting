@@ -4,6 +4,11 @@
 !/report/*.pdf
 !/report/*.png
 
+# Files that doesn't start with full_data or not a notebook in the data directory
+/data/*
+!/data/full_data*
+!/data/*.ipynb
+
 --------------------------------------------------------------------------------------------
 
 # Byte-compiled / optimized / DLL files
