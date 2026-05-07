@@ -1,0 +1,13 @@
+[project]
+name = "electricitydemandforecasting"
+version = "0.1.0"
+description = "Major task for Group 04 in IF5251 (AI in Production)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastparquet>=2026.3.0",
+    "ipykernel>=7.2.0",
+    "pandas>=3.0.2",
+    "pip>=26.1.1",
+    "seaborn>=0.13.2",
+]
