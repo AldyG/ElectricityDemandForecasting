@@ -17,6 +17,7 @@
 \usepackage{float}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
+\usepackage{pifont}
 
 % ─── Hyperref Setup ───────────────────────────────────────────────────────────
 \hypersetup{
@@ -118,43 +119,151 @@
 % ═════════════════════════════════════════════════════════════════════════════
 \chapter{Requirements}
 
-\lipsum[1][1-3]
+Electricity demand forecasting is a critical component of modern energy grid management.
+Accurate demand forecasts allow grid operators to balance supply and load proactively, reduce reliance on expensive peaking generation capacity, and facilitate the integration of variable renewable energy sources.
+This chapter defines the requirements for an AI-based electricity demand forecasting system that operates across multiple geographic locations, covering its goals, the needs of its intended users, the assumptions about the operating environment, and the metrics used to assess both model and system performance.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{System and Model Goals}
 
-\lipsum[2][1-4]
+The \textit{system goal} is to provide \textbf{accurate, automated, and near-real-time electricity demand forecasts} for multiple geographic locations, enabling energy operators and planners to make informed grid management decisions.
+The system ingests historical hourly consumption data alongside meteorological and temporal inputs spanning from 2016 onwards, and exposes forecast results through a web-based interface.
+
+The \textit{model goal} is to learn a \textbf{regression function} that maps a rich feature set which consists of over 30 meteorological variables.
+These features span from weather features such as temperature, humidity, solar radiation, and wind speed, to location identifiers and temporal features.
+The target variable, $y$, represents hourly electricity consumption per location cluster.
+Concretely, the model is expected to perform the following tasks.
+
+\begin{itemize}
+    \item \textbf{Forecast} hourly electricity consumption for up to 24 hours ahead for each monitored location.
+    \item \textbf{Generalise} across climatically and geographically diverse locations (e.g.\ London~UK, Oakland~CA, Groningen~NL, Ottawa~CA, Washington~DC as the locations currently available).
+    \item \textbf{Capture} non-linear relationships between weather drivers and demand, including seasonal patterns, diurnal cycles, and weather extremes.
+    \item \textbf{Remain performant} on unseen future data through periodic retraining as new consumption records accumulate.
+\end{itemize}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{User Requirements}
 
-\lipsum[3][1-4]
+Based on domain analysis, the following user requirements have been identified in Table \ref{tab:user-requirements}.
+These requirements are made on the basis of the intended use cases for the forecasting system, which include operational grid management, short-term energy procurement, and demand response planning.
+In addition to that, these requirements are not particularly made on general grounds, which limits the usage to a professional user base with certain domain expertise.
+
+\begin{table}[!h]
+    \centering
+    \caption{User Requirements Overview}
+    \begin{tabular}{p{1cm}|p{2.6cm}|p{6cm}|p{4.5cm}}
+        \toprule
+        \textbf{ID} & \textbf{Requirement Name} & \textbf{Description} & \textbf{Rationale} \\
+        \hline
+        UR-01 & Forecast Query & Users shall be able to request an electricity demand forecast for a specific monitored location and a time horizon of up to 48 hours via a web-based interface. & Enables users to obtain actionable forecasts for operational decision-making. \\
+        \hline
+        UR-02 & Location Selection & The system shall support all locations present in the training dataset, selectable by name or geographic identifier (e.g.\ city name or \texttt{location\_id}). & Allows users to access forecasts relevant to their specific geographic area of interest. \\
+        \hline
+        UR-03 & Forecast Visualisation & Forecast results shall be displayed as a time-series plot of predicted hourly consumption over the selected time window, with clear axis labelling. & Facilitates intuitive understanding of forecast trends and patterns. \\
+        \hline
+        UR-04 & Response Timeliness & Forecast results shall be returned within an operationally acceptable response time to support real-time grid management decisions. & Ensures forecasts are delivered in a timeframe that allows for timely action. \\
+        \hline
+        UR-05 & Accuracy Transparency & The interface shall communicate expected model error ranges so users can appropriately calibrate their trust in the forecasts. & Builds user trust by setting realistic expectations about forecast reliability. \\
+        \hline
+        UR-06 & Continuous Availability & The forecasting service shall be accessible at all times, reflecting the 24/7 nature of grid operations. & Ensures users can access forecasts whenever needed without interruption. \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:user-requirements}
+\end{table}
+
+The system is designed to meet the needs of users who require timely and accurate forecasts to support decision-making in contexts where electricity demand can fluctuate rapidly due to weather conditions and other factors.
+Therefore, the primary users of the system are \textit{\textbf{energy grid operators}} and \textit{\textbf{energy planning analysts}} who require reliable short-term demand forecasts to support operational and planning decisions.
+Aside from that, the system is \textbf{not designed for use} by \underline{end consumers} or other \underline{non-technical stakeholders}, and as such, the user requirements focus on the needs of professional users with domain expertise in energy management.
+Judging from the user requirements made before, Table \ref{tab:requirements-user-mapping} maps each user requirement to the relevant user types, along with possible usage scenarios and priority levels for implementation.
+
+\begin{table}[!h]
+    \centering
+    \caption{User Requirements Mapping to System Users}
+    \begin{tabular}{p{1cm}|p{3cm}|p{3cm}|p{5cm}|p{1.5cm}}
+        \toprule
+        \textbf{ID} & \textbf{Energy Grid Operator} & \textbf{Energy Planning Analyst} & \textbf{Usage Scenario} & \textbf{Priority} \\
+        \hline
+        UR-01 & \ding{51} & \ding{51} & Requesting forecasts for operational decision-making. & High \\
+        \hline
+        UR-02 & \ding{51} & \ding{51} & Selecting specific locations for forecast retrieval. & High \\
+        \hline
+        UR-03 & \ding{51} & \ding{51} & Visualising forecast results for interpretation. & Medium \\
+        \hline
+        UR-04 & \ding{51} & \ding{55} & Ensuring forecasts are delivered in a timely manner for real-time actions. & High \\
+        \hline
+        UR-05 & \ding{51} & \ding{51} & Understanding expected error ranges to calibrate trust. & Medium \\
+        \hline
+        UR-06 & \ding{51} & \ding{51} & Accessing forecasts at any time without interruption. & High \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:requirements-user-mapping}
+\end{table}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Environment Assumptions}
 
-\lipsum[4][1-4]
+With the requirements and goals defined, it is important to explicitly state the assumptions about the operating environment in which the system is designed to function.
+This is because the assumptions will be the bridge in defining the specifications of the system.
+Other than that, assumptions will help limit the system's scope and clarify the conditions under which the requirements are expected to hold true.
+The assumptions which are made for this system is listed in Table \ref{tab:environment-assumptions}.
+Deviations from these assumptions may require system or model updates.
+On top of that, any new assumptions that arises during development or deployment might need a reassessment of the requirements and design choices to ensure continued alignment with user needs and operational realities.
+
+% convert the assumptions into a table format
+\begin{table}[!h]
+    \centering
+    \caption{Environment Assumptions Overview}
+    \begin{tabular}{p{1cm}|p{3.5cm}|p{10cm}}
+        \toprule
+        \textbf{ID} & \textbf{Assumption Name} & \textbf{Description} \\
+        \hline
+        EA-01 & Weather Data Availability & Real-time and forecast meteorological data matching the 30+ feature schema used during training is continuously available as model input at inference time. \\
+        \hline
+        EA-02 & Hourly Temporal Resolution & All historical and incoming data is timestamped at hourly granularity. Sub-hourly or irregular inputs are outside the current scope. \\
+        \hline
+        EA-03 & Stationarity of Demand Patterns & The relationship between weather conditions, time features, and electricity consumption is assumed to be sufficiently stable over time for the trained model to remain valid between retraining cycles. Major structural disruptions may require earlier retraining. \\
+        \hline
+        EA-04 & Multi-Location Heterogeneity & Each location has a distinct demand profile driven by local climate, building stock, and population density. The location\_id and cluster\_size fields capture this heterogeneity and must be present at inference time. \\
+        \hline
+        EA-05 & Data Quality & Historical data is assumed to have been preprocessed (null values handled, outliers addressed) as reflected in the full\_data\_non\_null.csv dataset. Incoming data at inference time is expected to pass basic schema and range validation checks before being fed to the model. \\
+        \hline
+        EA-06 & Deployment Infrastructure & The system is deployed on a server or cloud instance capable of hosting the trained model and serving REST API requests from the Next.js frontend. \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:environment-assumptions}
+\end{table}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Metrics for Measurement}
 
-\lipsum[5][1-3]
+Measuring system performance requires a combination of model-level (functional) and system-level (non-functional) metrics.
+Functional metrics assess the accuracy and reliability of the demand forecasts produced by the regression model.
+Non-functional metrics assess the operational characteristics of the deployed service, including responsiveness, scalability, and availability.
 
 \subsection{Functional Metrics}
 
-\lipsum[6][1-4]
+The following functional metrics are used to evaluate the regression model's forecasting accuracy.
+All metrics are computed on a held-out test set comprising data from a time period not seen during training, across all monitored locations.
+For each metric, specific target thresholds are defined based on domain standards and operational requirements for electricity demand forecasting, which are shown in Table \ref{tab:functional-metrics}.
 
-% Example placeholder table
-\begin{table}[H]
+\begin{itemize}
+    \item \textbf{MAE} (Mean Absolute Error): the average absolute deviation between predicted and actual consumption; interpretable in the same unit as the target variable and robust to outliers.
+    \item \textbf{RMSE} (Root Mean Squared Error): penalises large forecast errors more heavily than MAE, making it sensitive to extreme deviations that are operationally costly.
+    \item \textbf{MAPE} (Mean Absolute Percentage Error): expresses error as a percentage of actual consumption, enabling fair comparison across locations with different absolute demand scales.
+    \item \textbf{R\textsuperscript{2}} (Coefficient of Determination): measures the proportion of variance in the target variable explained by the model, where a value of 1.0 indicates a perfect fit.
+\end{itemize}
+
+\begin{table}[!h]
     \centering
     \caption{Functional Metrics Overview}
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{4cm}}
         \toprule
         \textbf{Metric} & \textbf{Description} & \textbf{Target} \\
         \midrule
-        MAE  & Mean Absolute Error  & $< 5\%$ \\
-        RMSE & Root Mean Squared Error & $< 8\%$ \\
-        R²   & Coefficient of Determination & $> 0.90$ \\
+        MAE  & Mean Absolute Error              & $<10\%$ of mean target per location \\
+        RMSE & Root Mean Squared Error          & $<15\%$ of mean target per location \\
+        MAPE & Mean Absolute Percentage Error   & $<10\%$ \\
+        R\textsuperscript{2} & Coefficient of Determination & $>0.85$ \\
         \bottomrule
     \end{tabular}
     \label{tab:functional-metrics}
@@ -162,19 +271,29 @@
 
 \subsection{Non-Functional Metrics}
 
-\lipsum[7][1-4]
+Non-functional metrics govern the quality of the deployed service independent of model accuracy.
+These metrics ensure the system is operationally reliable for production use by energy grid operators operating on a 24/7 basis.
+For each non-functional metric, specific target thresholds are defined based on the operational requirements of real-time forecasting services in the energy sector, which are shown in Table \ref{tab:nonfunctional-metrics}.
+
+\begin{itemize}
+    \item \textbf{Latency}: the end-to-end response time from API request submission to forecast delivery. Low latency is critical in grid management contexts where decisions are time-sensitive.
+    \item \textbf{Throughput}: the number of concurrent forecast requests the service can handle per unit time without degradation, ensuring the system scales to multiple simultaneous operator queries.
+    \item \textbf{Availability}: the percentage of time the forecasting service is accessible. Unplanned downtime has direct operational consequences for grid operators who depend on continuous access.
+    \item \textbf{Model Freshness}: the maximum permissible age of the deployed model before retraining is mandated, ensuring that concept drift and seasonal pattern shifts do not degrade forecast accuracy over time.
+\end{itemize}
 
 % Example placeholder table
 \begin{table}[H]
     \centering
     \caption{Non-Functional Metrics Overview}
-    \begin{tabular}{lll}
+    \begin{tabular}{lp{4cm}}
         \toprule
-        \textbf{Metric}   & \textbf{Description}         & \textbf{Target}    \\
+        \textbf{Metric}     & \textbf{Target}          \\
         \midrule
-        Latency           & Inference response time      & <200 ms  \\
-        Throughput        & Requests per second          & >500 rps \\
-        Availability      & System uptime                & 99.9\%           \\
+        Latency             & $<500$\,ms               \\
+        Throughput          & $\geq50$ req/s          \\
+        Availability        & $\geq99.5\%$             \\
+        Model Freshness     & $\leq60$ days            \\
         \bottomrule
     \end{tabular}
     \label{tab:nonfunctional-metrics}
