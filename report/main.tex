@@ -250,14 +250,10 @@ Each use case corresponds to a specific interaction between the user and the sys
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Environment Assumptions}
 
-With the requirements and goals defined, it is important to explicitly state the assumptions about the operating environment in which the system is designed to function.
-This is because the assumptions will be the bridge in defining the specifications of the system.
-Other than that, assumptions will help limit the system's scope and clarify the conditions under which the requirements are expected to hold true.
-The assumptions which are made for this system is listed in Table \ref{tab:environment-assumptions}.
-Deviations from these assumptions may require system or model updates.
-On top of that, any new assumptions that arises during development or deployment might need a reassessment of the requirements and design choices to ensure continued alignment with user needs and operational realities.
+Environment assumptions explicitly define the conditions under which the system is expected to operate correctly. They bound the system's scope and serve as the basis for design decisions made in subsequent chapters. The assumptions are listed in Table~\ref{tab:environment-assumptions}. 
 
-% convert the assumptions into a table format
+Deviations from these assumptions may require system or model updates, and any new assumptions that arise during development should trigger a reassessment of the relevant requirements.
+
 \begin{table}[!h]
     \centering
     \caption{Environment Assumptions Overview}
@@ -265,7 +261,7 @@ On top of that, any new assumptions that arises during development or deployment
         \toprule
         \textbf{ID} & \textbf{Assumption Name} & \textbf{Description} \\
         \hline
-        EA-01 & Weather Data Availability & Real-time and forecast meteorological data matching the 30+ feature schema used during training is continuously available as model input at inference time. \\
+        EA-01 & Weather Data Availability & Real-time and forecast meteorological data matching the 30+ feature schema used during training is continuously available from the Weather API as model input at inference time. \\
         \hline
         EA-02 & Hourly Temporal Resolution & All historical and incoming data is timestamped at hourly granularity. Sub-hourly or irregular inputs are outside the current scope. \\
         \hline
@@ -275,7 +271,13 @@ On top of that, any new assumptions that arises during development or deployment
         \hline
         EA-05 & Data Quality & Historical data is assumed to have been preprocessed (null values handled, outliers addressed) as reflected in the full\_data\_non\_null.csv dataset. Incoming data at inference time is expected to pass basic schema and range validation checks before being fed to the model. \\
         \hline
-        EA-06 & Deployment Infrastructure & The system is deployed on a server or cloud instance capable of hosting the trained model and serving REST API requests from the Next.js frontend. \\
+        EA-06 & Deployment Infrastructure & The system is deployed on a server or cloud instance capable of hosting the trained model and serving REST API requests from the Next.js frontend. Internal component communication is assumed to be stable enough to meet the 500\,ms latency target. \\
+        \hline
+        EA-07 & Weather API Reliability & The external weather data provider is assumed to maintain sufficient uptime and data consistency. Prolonged API unavailability or schema changes may require fallback handling or data pipeline updates. \\
+        \hline
+        EA-08 & Location Scope & The system only serves locations present in the training dataset. Queries for out-of-distribution locations are outside the current scope and will not produce valid forecasts. \\
+        \hline % For scope limiting
+        EA-09 & Access Control & The system is assumed to be deployed in a controlled environment accessible only to authorized personnel. No public-facing authentication layer is required within the current scope. \\
         \bottomrule
     \end{tabular}
     \label{tab:environment-assumptions}
