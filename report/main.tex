@@ -68,7 +68,7 @@
     \vspace{1cm}
     \begin{figure}[!h]
         \centering
-        \includegraphics[width=0.35\textwidth]{itb_logo.png}
+        \includegraphics[width=0.35\textwidth]{images/itb_logo.png}
         \caption*{}
     \end{figure}
 
@@ -146,7 +146,6 @@ Concretely, the model is expected to perform the following tasks.
 
 Based on domain analysis, the following user requirements have been identified in Table \ref{tab:user-requirements}.
 These requirements are made on the basis of the intended use cases for the forecasting system, which include operational grid management, short-term energy procurement, and demand response planning.
-In addition to that, these requirements are not particularly made on general grounds, which limits the usage to a professional user base with certain domain expertise.
 
 \begin{table}[!h]
     \centering
@@ -159,22 +158,31 @@ In addition to that, these requirements are not particularly made on general gro
         \hline
         UR-02 & Location Selection & The system shall support all locations present in the training dataset, selectable by name or geographic identifier (e.g.\ city name or \texttt{location\_id}). & Allows users to access forecasts relevant to their specific geographic area of interest. \\
         \hline
-        UR-03 & Forecast Visualisation & Forecast results shall be displayed as a time-series plot of predicted hourly consumption over the selected time window, with clear axis labelling. & Facilitates intuitive understanding of forecast trends and patterns. \\
+        UR-03 & Weather Data Fetch & The system shall fetch the current relevant weather data for each location automatically. & Reduces user burden by eliminating manual weather input, while ensuring forecasts are based on current meteorological data. \\
         \hline
-        UR-04 & Response Timeliness & Forecast results shall be returned within an operationally acceptable response time to support real-time grid management decisions. & Ensures forecasts are delivered in a timeframe that allows for timely action. \\
+        UR-04 & Forecast Visualisation & Forecast results shall be displayed as a time-series plot of predicted hourly consumption over the selected time window, with clear axis labelling. & Facilitates intuitive understanding of forecast trends and patterns. \\
         \hline
-        UR-05 & Accuracy Transparency & The interface shall communicate expected model error ranges so users can appropriately calibrate their trust in the forecasts. & Builds user trust by setting realistic expectations about forecast reliability. \\
+        UR-05 & Response Timeliness & Forecast results shall be returned within an operationally acceptable response time to support real-time grid management decisions. & Ensures forecasts are delivered in a timeframe that allows for timely action. \\
         \hline
-        UR-06 & Continuous Availability & The forecasting service shall be accessible at all times, reflecting the 24/7 nature of grid operations. & Ensures users can access forecasts whenever needed without interruption. \\
+        UR-06 & Accuracy Transparency & The interface shall communicate expected model error ranges so users can appropriately calibrate their trust in the forecasts. & Builds user trust by setting realistic expectations about forecast reliability. \\
+        \hline
+        UR-07 & Continuous Availability & The forecasting service shall be accessible at all times, reflecting the 24/7 nature of grid operations. & Ensures users can access forecasts whenever needed without interruption. \\
+        \hline
+        UR-08 & Validation Interface & Users must be able to flag or manually validate forecasts that fall below a confidence threshold. & Allows users to ensure forecast quality and accuracy and supplying additional data for retraining. \\
+        \hline
+        UR-09 & Model Version Visibility & Users must be able to see which version of the forecasting model was used to generate a particular forecast. & Enables users to understand the context and potential staleness of each forecast. \\
         \bottomrule
     \end{tabular}
     \label{tab:user-requirements}
 \end{table}
 
-The system is designed to meet the needs of users who require timely and accurate forecasts to support decision-making in contexts where electricity demand can fluctuate rapidly due to weather conditions and other factors.
-Therefore, the primary users of the system are \textit{\textbf{energy grid operators}} and \textit{\textbf{energy planning analysts}} who require reliable short-term demand forecasts to support operational and planning decisions.
-Aside from that, the system is \textbf{not designed for use} by \underline{end consumers} or other \underline{non-technical stakeholders}, and as such, the user requirements focus on the needs of professional users with domain expertise in energy management.
-Judging from the user requirements made before, Table \ref{tab:requirements-user-mapping} maps each user requirement to the relevant user types, along with possible usage scenarios and priority levels for implementation.
+In addition to that, these requirements assume that the users have a certain level of domain expertise in energy management and are familiar with interpreting time-series forecasts in the context of grid operations.
+
+\subsection{User Types}
+
+The system targets two primary user types: \textbf{energy grid operators}, who rely on  short-term forecasts for real-time grid balancing decisions, and \textbf{energy planning analysts}, who use forecasts to support procurement and demand response planning. Both groups require domain expertise in energy management and are assumed to be comfortable interpreting time-series forecasts in an operational context.
+
+The system is \textbf{not intended} for end consumers or non-technical stakeholders. Table~\ref{tab:requirements-user-mapping} maps each user requirement to the applicable user type, along with representative usage scenarios and implementation priority.
 
 \begin{table}[!h]
     \centering
@@ -187,16 +195,56 @@ Judging from the user requirements made before, Table \ref{tab:requirements-user
         \hline
         UR-02 & \ding{51} & \ding{51} & Selecting specific locations for forecast retrieval. & High \\
         \hline
-        UR-03 & \ding{51} & \ding{51} & Visualising forecast results for interpretation. & Medium \\
+        UR-03 & \ding{51} & \ding{51} & Ensuring queries doesn't burden the user. & High \\
         \hline
-        UR-04 & \ding{51} & \ding{55} & Ensuring forecasts are delivered in a timely manner for real-time actions. & High \\
+        UR-04 & \ding{51} & \ding{51} & Visualising forecast results for interpretation. & Medium \\
         \hline
-        UR-05 & \ding{51} & \ding{51} & Understanding expected error ranges to calibrate trust. & Medium \\
+        UR-05 & \ding{51} & \ding{55} & Ensuring forecasts are delivered in a timely manner for real-time actions. & High \\
         \hline
-        UR-06 & \ding{51} & \ding{51} & Accessing forecasts at any time without interruption. & High \\
+        UR-06 & \ding{51} & \ding{51} & Understanding expected error ranges to calibrate trust. & Medium \\
+        \hline
+        UR-07 & \ding{51} & \ding{51} & Accessing forecasts at any time without interruption. & High \\
+        \hline
+        UR-08 & \ding{51} & \ding{55} & Validating forecasts that fall below confidence thresholds. & Medium \\
+        \hline
+        UR-09 & \ding{51} & \ding{51} & Seeing which version of the model was used. & Medium. \\
         \bottomrule
     \end{tabular}
     \label{tab:requirements-user-mapping}
+\end{table}
+
+\subsection{Use Cases}
+
+Based on the user requirements defined earlier, the following use cases have been identified for the electricity demand forecasting system, as illustrated in Figure~\ref{fig:use-case-diagram}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/use_case_diagram.png}
+    \caption{Use Case Diagram for Electricity Demand Forecasting System}
+    \label{fig:use-case-diagram}
+\end{figure}
+
+Each use case corresponds to a specific interaction between the user and the system, aligned with the requirements outlined in Table~\ref{tab:user-requirements}, Table~\ref{tab:use-cases} explains this further.
+
+\begin{table}[H]
+    \centering
+    \caption{Use Cases Overview}
+    \begin{tabular}{p{0.7cm}|p{2.2cm}|p{3cm}|p{2.5cm}|p{2.5cm}|p{2cm}}
+        \toprule
+        \textbf{ID} & \textbf{Name} & \textbf{Description} & \textbf{Input} & \textbf{Output} & \textbf{Related Req.} \\
+        \hline
+        UC-01 & Request Forecast & User selects a location and time horizon to request a demand forecast via the web interface. & Location identifier, time horizon (up to 48 h) & Inference forecast result & UR-01, UR-02, UR-03, UR-05, UR-07 \\
+        \hline
+        UC-02 & View Visualisation & User views forecast results as a labelled hourly time-series plot. & Inference forecast result & Time-series plot rendered in the interface & UR-04 \\
+        \hline
+        UC-03 & Validate Forecast & User flags a low-confidence forecast for manual review. Extends UC-01. & Forecast result & Correction queued for retraining & UR-06, UR-08 \\
+        \hline
+        UC-04 & View Model Version & User checks which model version produced a given forecast. & Forecast identifier & Model version and training date & UR-09 \\
+        \hline
+        UC-05 & Fetch Weather Data & System automatically retrieves meteorological data for the requested location. Included in UC-01. & Location identifier, request timestamp & Variable meteorological feature set & UR-03 \\
+        \bottomrule
+\end{tabular}
+\label{tab:use-cases}
 \end{table}
 
 % ─────────────────────────────────────────────────────────────────────────────
