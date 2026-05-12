@@ -162,15 +162,15 @@ These requirements are made on the basis of the intended use cases for the forec
         \hline
         UR-04 & Forecast Visualisation & Forecast results shall be displayed as a time-series plot of predicted hourly consumption over the selected time window, with clear axis labelling. & Facilitates intuitive understanding of forecast trends and patterns. \\
         \hline
-        UR-05 & Response Timeliness & Forecast results shall be returned within an operationally acceptable response time to support real-time grid management decisions. & Ensures forecasts are delivered in a timeframe that allows for timely action. \\
+        UR-05 & Validation Interface & Users must be able to flag or manually validate forecasts that fall below a confidence threshold. & Allows users to ensure forecast quality and accuracy and supplying additional data for retraining. \\
         \hline
-        UR-06 & Accuracy Transparency & The interface shall communicate expected model error ranges so users can appropriately calibrate their trust in the forecasts. & Builds user trust by setting realistic expectations about forecast reliability. \\
+        UR-06 & Model Version Visibility & Users must be able to see which version of the forecasting model was used to generate a particular forecast. & Enables users to understand the context and potential staleness of each forecast. \\
         \hline
-        UR-07 & Continuous Availability & The forecasting service shall be accessible at all times, reflecting the 24/7 nature of grid operations. & Ensures users can access forecasts whenever needed without interruption. \\
+        UR-07 & Response Timeliness & Forecast results shall be returned within an operationally acceptable response time to support real-time grid management decisions. & Ensures forecasts are delivered in a timeframe that allows for timely action. \\
         \hline
-        UR-08 & Validation Interface & Users must be able to flag or manually validate forecasts that fall below a confidence threshold. & Allows users to ensure forecast quality and accuracy and supplying additional data for retraining. \\
+        UR-08 & Accuracy Transparency & The interface shall communicate expected model error ranges so users can appropriately calibrate their trust in the forecasts. & Builds user trust by setting realistic expectations about forecast reliability. \\
         \hline
-        UR-09 & Model Version Visibility & Users must be able to see which version of the forecasting model was used to generate a particular forecast. & Enables users to understand the context and potential staleness of each forecast. \\
+        UR-09 & Continuous Availability & The forecasting service shall be accessible at all times, reflecting the 24/7 nature of grid operations. & Ensures users can access forecasts whenever needed without interruption. \\
         \bottomrule
     \end{tabular}
     \label{tab:user-requirements}
@@ -199,15 +199,15 @@ The system is \textbf{not intended} for end consumers or non-technical stakehold
         \hline
         UR-04 & \ding{51} & \ding{51} & Visualising forecast results for interpretation. & Medium \\
         \hline
-        UR-05 & \ding{51} & \ding{55} & Ensuring forecasts are delivered in a timely manner for real-time actions. & High \\
+        UR-05 & \ding{51} & \ding{55} & Validating forecasts that fall below confidence thresholds. & Medium \\
         \hline
-        UR-06 & \ding{51} & \ding{51} & Understanding expected error ranges to calibrate trust. & Medium \\
+        UR-06 & \ding{51} & \ding{51} & Seeing which version of the model was used. & Medium. \\
         \hline
-        UR-07 & \ding{51} & \ding{51} & Accessing forecasts at any time without interruption. & High \\
+        UR-07 & \ding{51} & \ding{55} & Ensuring forecasts are delivered in a timely manner for real-time actions. & High \\
         \hline
-        UR-08 & \ding{51} & \ding{55} & Validating forecasts that fall below confidence thresholds. & Medium \\
+        UR-08 & \ding{51} & \ding{51} & Understanding expected error ranges to calibrate trust. & Medium \\
         \hline
-        UR-09 & \ding{51} & \ding{51} & Seeing which version of the model was used. & Medium. \\
+        UR-09 & \ding{51} & \ding{51} & Accessing forecasts at any time without interruption. & High \\
         \bottomrule
     \end{tabular}
     \label{tab:requirements-user-mapping}
@@ -233,13 +233,13 @@ Each use case corresponds to a specific interaction between the user and the sys
         \toprule
         \textbf{ID} & \textbf{Name} & \textbf{Description} & \textbf{Input} & \textbf{Output} & \textbf{Related Req.} \\
         \hline
-        UC-01 & Request Forecast & User selects a location and time horizon to request a demand forecast via the web interface. & Location identifier, time horizon (up to 48 h) & Inference forecast result & UR-01, UR-02, UR-03, UR-05, UR-07 \\
+        UC-01 & Request Forecast & User selects a location and time horizon to request a demand forecast via the web interface. & Location identifier, time horizon (up to 48 h) & Inference forecast result & UR-01, UR-02, UR-03, UR-07, UR-09 \\
         \hline
         UC-02 & View Visualisation & User views forecast results as a labelled hourly time-series plot. & Inference forecast result & Time-series plot rendered in the interface & UR-04 \\
         \hline
-        UC-03 & Validate Forecast & User flags a low-confidence forecast for manual review. Extends UC-01. & Forecast result & Correction queued for retraining & UR-06, UR-08 \\
+        UC-03 & Validate Forecast & User flags a low-confidence forecast for manual review. Extends UC-01. & Forecast result & Correction queued for retraining & UR-05, UR-08 \\
         \hline
-        UC-04 & View Model Version & User checks which model version produced a given forecast. & Forecast identifier & Model version and training date & UR-09 \\
+        UC-04 & View Model Version & User checks which model version produced a given forecast. & Forecast identifier & Model version and training date & UR-06 \\
         \hline
         UC-05 & Fetch Weather Data & System automatically retrieves meteorological data for the requested location. Included in UC-01. & Location identifier, request timestamp & Variable meteorological feature set & UR-03 \\
         \bottomrule
