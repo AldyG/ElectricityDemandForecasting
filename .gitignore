@@ -5,6 +5,7 @@
 !/report/*.png
 !/report/images/
 !/report/images/*.png
+!/report/Makefile
 
 # Files that doesn't start with full_data or not a notebook in the data directory
 /data/*
