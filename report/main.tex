@@ -220,7 +220,7 @@ Based on the user requirements defined earlier, the following use cases have bee
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{images/use_case_diagram.png}
-    \caption{Use Case Diagram for Electricity Demand Forecasting System}
+    \caption{System Use Case Diagram}
     \label{fig:use-case-diagram}
 \end{figure}
 
@@ -282,6 +282,54 @@ Deviations from these assumptions may require system or model updates, and any n
     \end{tabular}
     \label{tab:environment-assumptions}
 \end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{System Components and Interactions}
+
+This section identifies the AI and non-AI components that constitute the forecasting system, maps their interactions, and describes the feedback loops through which the system improves over time.
+
+\subsection{AI and Non-AI Components}
+Table~\ref{tab:system-components} categorises the system components into AI and non-AI elements, along with their roles and interactions.
+
+\begin{table}[!h]
+    \centering
+    \caption{System Components Overview}
+    \begin{tabular}{p{1.5cm}|p{3.5cm}|p{9.5cm}}
+        \toprule
+        \textbf{Type} & \textbf{Component} & \textbf{Role} \\
+        \hline
+        AI & Forecasting Model & Produces hourly electricity demand forecasts and confidence estimates. \\
+        \hline
+        Non-AI & Inference Service & Serves model inference requests and routes responses to the frontend. \\
+        \hline
+        Non-AI & Feature Store  & Manages and serves consistent feature sets for both training and inference. \\
+        \hline
+        Non-AI & Database & Persists historical consumption data, forecast records, and validation logs. \\
+        \hline
+        Non-AI & Message Queue & Buffers operator validations and triggers retraining when the queue threshold is reached. \\
+        \hline
+        Non-AI & Dashboard Service & Exposes a read API for the frontend to query historical weather and electricity consumption records from the database. \\
+        \hline
+        Non-AI & Frontend Website & Provides the web interface for forecast queries, visualisation, and validation prompts. \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:system-components}
+\end{table}
+
+\subsection{Feedback Loop}
+
+The system incorporates an \textbf{operator correction loop} that enables continuous model improvement. Figure~\ref{fig:feedback-loop} illustrates this feedback mechanism.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/feedback_loop.png}
+    \caption{System Feedback Loop}
+    \label{fig:feedback-loop}
+\end{figure}
+
+When a forecast request is received, the model produces a result which is then checked against a confidence threshold. If confidence is sufficient, the forecast is delivered directly to the operator. Otherwise, the operator is prompted to validate the forecast.
+
+If the operator agrees, the correction is logged to the validation queue; if not, the forecast is dismissed without further action. Once the queue reaches 50 validated corrections, or 60 days have elapsed since the last retraining, whichever comes first, a retraining job is triggered. The retrained model then replaces the previous one and resumes serving forecast requests.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Metrics for Measurement}
