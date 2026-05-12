@@ -195,13 +195,13 @@ The system is \textbf{not intended} for end consumers or non-technical stakehold
         \hline
         UR-02 & \ding{51} & \ding{51} & Selecting specific locations for forecast retrieval. & High \\
         \hline
-        UR-03 & \ding{51} & \ding{51} & System automatically fetches weather data upon location selection.. & High \\
+        UR-03 & \ding{51} & \ding{51} & System automatically fetches weather data upon location selection. & High \\
         \hline
         UR-04 & \ding{51} & \ding{51} & Visualising forecast results for interpretation. & Medium \\
         \hline
         UR-05 & \ding{51} & \ding{55} & Validating forecasts that fall below confidence thresholds. & Medium \\
         \hline
-        UR-06 & \ding{51} & \ding{51} & Seeing which version of the model was used. & Medium. \\
+        UR-06 & \ding{51} & \ding{51} & Seeing which version of the model was used. & Medium \\
         \hline
         UR-07 & \ding{51} & \ding{55} & Ensuring forecasts are delivered in a timely manner for real-time actions. & High \\
         \hline
@@ -286,7 +286,7 @@ Deviations from these assumptions may require system or model updates, and any n
 % ─────────────────────────────────────────────────────────────────────────────
 \section{System Components and Interactions}
 
-This section identifies the AI and non-AI components that constitute the forecasting system, maps their interactions, and describes the feedback loops through which the system improves over time.
+This section identifies the AI and non-AI components that constitute the forecasting system, maps their interactions, and describes the feedback loop through which the system improves over time.
 
 \subsection{AI and Non-AI Components}
 Table~\ref{tab:system-components} categorises the system components into AI and non-AI elements along with their roles.
@@ -470,14 +470,42 @@ For each non-functional metric, specific target thresholds are defined based on 
 \lipsum[15][1-2]
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Telemetry and Monitoring}
+\section{Monitoring}
 
-\lipsum[16][1-4]
+Model monitoring ensures that the Forecasting Model continues to perform within acceptable bounds after deployment. The system uses Evidently to track model behaviour in production across two dimensions: data quality and prediction drift.
+
+\paragraph{Data Quality Monitoring}
+
+Evidently monitors incoming inference requests for schema violations, out-of-range feature values, and missing fields against the expected 30+ variable meteorological feature schema. This directly supports environment assumption EA-05, which requires incoming data to pass basic schema and range validation before being fed to the model. Any violations are logged to the Database and trigger an alert to the 
+responsible personnel.
+
+\paragraph{Prediction Drift Monitoring}
+After each forecast window elapses, actual consumption records are ingested and compared against prior forecasts. Evidently computes drift metrics over a rolling window to detect whether the distribution of forecast errors has shifted significantly from the baseline established at training time. If drift is detected, an alert is raised and the event is logged. This connects directly to the hybrid retraining trigger described in Section~\ref{sec:feedback-loop}, sustained drift is one of the signals that may prompt earlier retraining outside the scheduled 60-day cycle.
+
+\paragraph{Monitoring Dashboard}
+Evidently generates monitoring reports that are surfaced through the monitoring dashboard, giving operators visibility into model health over time. Key indicators displayed include feature distribution shifts, rolling MAPE, and the current validation queue size relative to the retraining threshold.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Anticipate Evolution}
 
-\lipsum[17][1-4]
+The system is designed with extensibility in mind, recognising that operational requirements and data availability will evolve over time. The following scenarios represent anticipated directions of change and the mechanisms through which the system accommodates them.
+
+\paragraph{New Locations}
+The system currently supports five monitored locations. Adding new locations requires sourcing historical consumption data for the target city, registering the corresponding \texttt{location\_id} and \texttt{cluster\_size} entries in the Feature Store, and retraining or fine-tuning the Forecasting Model to cover the new demand profile. 
+Model performance on the new location must be validated against the functional metric targets defined in Section~\ref{sec:metrics} before the location is made available to users.
+
+\paragraph{New Weather Features}
+If the Weather API introduces additional meteorological variables, or the team identifies new signals that improve forecast accuracy, the feature schema must be updated consistently across the Feature Store, the model input layer, and the data validation pipeline. Environment assumption EA-01 would require reassessment to reflect the updated schema, and the model must be retrained on the expanded feature 
+set before deployment.
+
+% \paragraph{Model Architecture Upgrade}
+% The system is designed to be model-agnostic at the infrastructure level. Replacing the current regression model with a different architecture — such as a neural network or ensemble method — requires only that the new model conforms to the existing input and output interface expected by the Inference Service. The model registry and versioning system ensures that rollback to a previous architecture remains possible if the upgrade degrades performance.
+
+\paragraph{Scaling to More Users}
+The current throughput target of 50 req/s is sufficient for the anticipated professional user base. Should usage grow beyond this threshold, Kubernetes horizontal pod autoscaling allows additional Inference Service replicas to be provisioned without architectural changes. The stateless design of the Inference Service ensures that new replicas can handle requests independently without shared in-memory state.
+
+\paragraph{Retraining Threshold Tuning}
+The hybrid retraining trigger, 50 validated corrections or 60 days, whichever comes first, is an initial estimate based on expected validation frequency during the assignment period. In production, these thresholds may require adjustment as actual validation patterns become clearer. Both parameters should be exposed as configurable values in the system configuration rather than hardcoded, allowing tuning without redeployment.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Big Data Processing}
